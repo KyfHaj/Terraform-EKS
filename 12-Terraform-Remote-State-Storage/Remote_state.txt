@@ -1,0 +1,38 @@
+- State of terraform lưu trữ resource đã được tạo ra.
+- Được tạo ra ở local khi terraform (init, validate, plan, apply)
+- Remote state để share state với admin khác:
+    S3: Terraform state storage
+    DynamoDB: Terraform state locking
+  Terraform state storage: như kiểu state ở local
+  Terraform state locking: tránh xung đột update state giữa các admin cùng lúc bằng cách:
+    1 thời điểm, chờ 1 admin update state xong rồi cho admin khác tiếp cận
+    Nếu state locking fails thì, terraform ko thể tiếp tục
+
+Triển khai:
+    - Tạo S3 bucket, name: terraform-on-aws-eks-kyf26
+    - Tạo folder:
+        Create Folder
+        Folder Name: dev
+            Click on Create Folder
+            Create Folder
+            Folder Name: dev/eks-cluster
+            Click on Create Folder
+            Create Folder
+            Folder Name: dev/app1k8s
+            Click on Create Folder
+
+    - Tạo DynamoDB
+        EKS Cluster DynamoDB Table
+            Create Dynamo DB Table for EKS Cluster
+            Name: dev-ekscluster
+            Partition key (Primary Key): LockID (Type as String)
+            Table settings: Use default settings (checked)
+                Click on Create
+        App1 Kubernetes DynamoDB Table
+            Create Dynamo DB Table for app1k8s
+            Table Name: dev-app1k8s
+            Partition key (Primary Key): LockID (Type as String)
+            Table settings: Use default settings (checked)
+                Click on Create
+
+    - Tiếp các bước terraform như cũ, test (nhớ security-group của workernode cho Node-port)

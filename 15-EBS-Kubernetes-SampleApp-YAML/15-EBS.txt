@@ -1,0 +1,36 @@
+Tạo 1 app, sử dụng EBS-CSI-driver
+Kiểm tra:
+    aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1
+    kubectl get pod -n kube-system
+
+Triển khai:
+    kubectl apply -f 03-kube-manifests-UMS-WebApp/
+
+    1/ Nhìn EBS qua console
+    2/ Test:
+       	http://<CLB-DNS-URL>
+       	http://<NLB-DNS-URL>
+       	Username: admin101
+       	Password: password101
+
+       	# You can also try by connecting MySQL DB and verify
+       	# Connect to MySQL Database
+       	kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -pdbpassword11
+
+       	# Verify usermgmt schema got created which we provided in ConfigMap
+       	mysql> show schemas;
+       	mysql> use webappdb;
+       	mysql> show tables;
+       	mysql> select * from user;
+
+
+    Khi kubectl delete -f ... thì mọi resource sẽ đi luôn, kể cả pvc. Kiểm tra EBS sẽ bị xóa nốt.
+
+Có thể chỉnh sửa lại để EBS, ko bị delete (phải delete manually) khi: kubectl delete -f ...
+**** Chỉ có thể tăng volume, ko thể giảm
+Thêm vào storage_class.yaml:
+    reclaimPolicy: Retain
+    allowVolumeExpansion: true
+
+Sau đó có thể sửa lại "02-persistent-volume-claim.yaml":
+    và kubectl edit hoặc apply -f (cái mới)

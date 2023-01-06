@@ -1,0 +1,71 @@
+19-20: Đều tạo và config bằng console hoặc manual, ko dùng terraform. Các file terraform chỉ để tạo 1 eks-cluster cơ bản
+01-... giống 01 của 15-EBS
+--------------------------------------------------------------------
+Configmap: map userarn hoặc rolearn của AWS -> user hoặc group của eks-cluster
+	user hoặc group của eks-cluster sẽ được Rolebinding hoặc Clusterbinding -> Role hoặc ClusterRole (định nghĩa quyền được làm gì)
+	user hoặc group chính là 2 "kind" của Clusterrolebinding hoặc Rolebinding
+
+
+Thèn tạo ra CLuster được gọi là: Cluster_Creator_User và info ko ở trong aws-auth configmap
+Nếu có lỗi gì với configmap/aws-auth thì triệu hồi Cluster_Creator_User để restore`
+
+
+Triển khai:
+	1/ Tạo 1 User-quyền admin, có Access_key + secret_key
+	2/ AWS configure user-key vừa tạo
+		    aws configure --profile iniesta
+	3/ Kiểm tra:
+		    aws sts get-caller-identity
+	4/ Xóa .kube/config cũ
+	        rm .kube/config
+	   Config lại cho .kube/config call -> API server của EKS-cluster bằng "--profile iniesta" ở trên
+		    aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1 --profile iniesta
+	
+	5/ Lúc này kubectl sẽ fail vì cần edit configmap/auth-aws. Có thể vào console của user:iniesta để xem sẽ ko thấy gì ở eks-tab
+	   Sửa lại aws configure --profile kyxuan0 để có quyền kubectl:
+		    export AWS_PROFILE=kyxuan0
+	   Kiểm tra bằng: 
+		    aws sts get-caller-identity
+	   Có thể xem:
+	        aws configure list-profiles
+	6/ Xóa .kube/config cũ và
+		    aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1 --profile kyxuan0
+		    aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1 --profile default
+	7/ Chỉnh sửa lại configmap:
+            kubectl -n kube-system edit configmap aws-auth
+              mapUsers: |
+                - userarn: arn:aws:iam::905159657258:user/iniesta
+                  username: iniesta
+                  groups:
+                  - system:masters
+    8/ Kiểm tra:
+            kubectl -n kube-system get configmap aws-auth -o yaml
+
+    9/ Chuyển lại user-key của "iniesta"
+            export AWS_PROFILE=iniesta
+       Kiểm tra:
+            aws sts get-caller-identity
+       Xóa .kube/config cũ và cập nhật:
+            rm .kube/config
+            aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1 --profile iniesta
+
+    10/ Test qua console:
+            Vào eks, và xem các tab được phép
+
+-------------------------------------------------
+Xem thử Clusterrolebinding + ClusterRole
+    groups: system:masters   được bind với Role nào?
+
+-------------------------------------------------
+Như vậy trong: 
+	mapRoles: có group mà sao vẫn có username??
+	mapUsers: có username mà sao vẫn có group??
+Trả lời:
+    Để vừa có cái này vừa có cái kia:
+        group: developer
+        user: Readonly
+
+Trong file .kube/config:			???????????
+context:
+	arn:aws:eks:ap-northeast-1:905159657258:cluster/hr-stag-eksdemo1
+  arn: của aws. API sẽ qua configmap để biết nó thuộc group,user nào

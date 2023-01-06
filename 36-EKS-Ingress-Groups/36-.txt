@@ -1,0 +1,6 @@
+36:  Tách ra thành nhiều ingress-group thay vì như 35
+Nếu 3 cái khác như trong .yaml:
+    Test thì:
+        24/25/26.haxuan.link/{ko có gì}/app1/app2
+            đều được
+Nếu 3 cái giống như trong teraform (kyf.haxuan.link) thì càng được

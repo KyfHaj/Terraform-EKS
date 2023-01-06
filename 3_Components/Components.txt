@@ -1,0 +1,16 @@
+Quy trình:
+    terraform init
+    terraform validate
+    terraform plan
+    terraform apply
+    terraform plan destroy  (để xem sẽ destroy gì)
+    terraform destroy
+Test các link:
+    ip
+    ip/app1/index.html
+    ip/app1/metadata.html
+
+Cần phải hiểu thêm các file được tạo ra như
+    .tfstate
+    .tfstate.backup
+    ...

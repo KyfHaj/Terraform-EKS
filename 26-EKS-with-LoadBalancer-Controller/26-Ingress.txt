@@ -1,0 +1,20 @@
+Phải tạo private-node-group cho eks nên:
+	Comment Public Node Group and its outputs
+		c5-07-eks-node-group-public.tf	
+	Uncomment Private Node Group and its outputs
+		c5-08-eks-node-group-private.tf	
+	Comment + uncomment public+private c5-02-eks-outputs.tf
+Sau đó:
+	terraform init -> apply
+
+Tham khảo các bước đã làm tay:
+	D:\KYF\K8s_EKS\EKS\8_ALB_Ingress\1_Install_ALB_Controller\2_0_Cài LoadBalancerController.txt
+  Thêm 5-02-ingress-class.tf: để mặc định sử dụng: controller = "ingress.k8s.aws/alb"
+
+Kiểm tra bằng:
+	kubectl -n kube-system get deployment 
+	kubectl -n kube-system get deployment aws-load-balancer-controller
+	
+	kubectl -n kube-system get svc 
+
+	kubectl -n kube-system logs -f  aws-load-balancer-controller-86b598cbd6-5pjfk

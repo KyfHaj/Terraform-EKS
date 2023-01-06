@@ -1,0 +1,9 @@
+IRSA : IAM Roles for service-account. Để service-account của EKS có quyền sử dụng Aws-service
+
+Slide 141
+
+SA khi cần dùng AWS service thì sẽ lấy JWT (token) gửi đến identity-provider dùng oidc. Cái này sẽ xác thực. Nếu ok thì sẽ gửi 1 jwt đến Aws-STS. Aws-STS sẽ tạo 1 temporary-role credentials (Temporary security credential
+) có quyền access s3 tạm thời
+
+--------------------------------------------------------------------------
+IAM identity-provider: sẽ xác thực 1 cái JWT, sau đó nếu ok sẽ cấp credentials cho 1 external identity provider có quyền dùng aws-service

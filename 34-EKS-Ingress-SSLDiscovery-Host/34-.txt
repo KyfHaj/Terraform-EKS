@@ -1,0 +1,54 @@
+Chỉ có "RSA 2048" mới auto-discovery, các certification loại "ECDSA P 256" hoặc "ECDSA P 256" không thể tự auto-discover được
+Đối với terraform cần thời gian để tạo certificate <30s, sau đó ingress sẽ auto-discover certification)
+----------------------------------
+34 Giống 33: 99%, chỉ bỏ đi:
+alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:905159657258:certificate/f7429a0a-aac3-446f-b92b-763d53141729
+vì k8s có thể tự động discover certification qua host:
+    app201.stacksimplify.com
+    host: app101.stacksimplify.com
+  tls:
+  - hosts:
+    - "*.haxuan.link"
+  rules:
+    - http:
+        paths:
+          - path: /app1
+            pathType: Prefix
+            backend:
+              service:
+                name: app1-nginx-nodeport-service
+                port:
+                  number: 80
+    - http:
+        paths:
+          - path: /app2
+            pathType: Prefix
+            backend:
+              service:
+                name: app2-nginx-nodeport-service
+                port:
+                  number: 80
+     Thay vì:
+    rules:
+      - host: app102.stacksimplify.com
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: app1-nginx-nodeport-service
+                  port:
+                    number: 80
+      - host: app202.stacksimplify.com
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: app2-nginx-nodeport-service
+                  port:
+                    number: 80
+-----------------------------------------------------------------
+  Ở terraform hóa (05-...) cũng chỉ để thay đổi điều này

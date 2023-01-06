@@ -1,0 +1,3 @@
+Tạo 1 thèn User chỉ có full quyền với Aws EKS nhưng lại là admin trong eks-cluster (nó ko phải là admin của AWS-account, chỉ là 1 user có quyền với eks)
+Các bước giống 19,
+

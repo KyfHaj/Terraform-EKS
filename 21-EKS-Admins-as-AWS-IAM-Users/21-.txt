@@ -1,0 +1,40 @@
+21: Là terraform hóa của 19,20
+Phải chỉnh sửa khác 1 chút so với 01-... của 15-EBS...
+------------------------------------------------------------
+Đây là role của Nodegroup, sẽ có quyền của username + groups
+      #rolearn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${aws_iam_role.eks_nodegroup_role.name}"
+      rolearn = "${aws_iam_role.eks_nodegroup_role.arn}"
+      username = "system:node:{{EC2PrivateDNSName}}"
+      groups = ["system:bootstrappers", "system:nodes"]
+
+Điều đó có nghĩa là các Worker-node trong Node-group có các quyền này
+
+c7-01: Thêm provider
+c7-02: Tạo configmap -> các user mới
+c8-01: Thêm admin_user + permission
+c8-02: Thêm basic_user + permission
+c5-07: Tạo nodegroup phải thêm "depends_on: kubernetes_config_map_v1.aws_auth"
+	Tức là phải đảm bảo configmap đã edit trước khi có nodegroup 
+			Rắc rối vl!
+Triển khai:
+    terraform init ... apply
+  Tạo pass, user-key cho admin_user:
+    aws iam create-login-profile --user-name hr-dev-eksadmin1 --password @EKSUser101 --no-password-reset-required
+    aws iam create-access-key --user-name hr-dev-eksadmin1
+
+  Tạo pass, user-key cho basic_user:
+    aws iam create-login-profile --user-name hr-dev-eksadmin2 --password @EKSUser101 --no-password-reset-required
+    aws iam create-access-key --user-name hr-dev-eksadmin2
+
+  Dùng aws configure:
+    aws configure --profile hr-dev-eksadmin1
+    aws configure --profile hr-dev-eksadmin2
+  Xem tất cả profile:
+    aws configure list-profiles
+  Kiểm tra đang dùng user-key nào:
+    aws sts get-caller-identity
+  Lựa chọn:
+    export AWS_PROFILE=...
+
+  Triệu hồi demon:
+    aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1

@@ -1,0 +1,56 @@
+24- Tạo 1 IAM group có role->eks-full-access như 23,22
+Nhưng quyền trong eks ko còn là admin mà chỉ là eks-readonly
+-----------------------------------------------------
+Phần 01-...: Terraform hóa, ko cần 02-...
+02-...: chỉ để hiểu thêm theo phong cách kubectl
+-----------------------------------------------------
+
+Role -> resource inside Namespace
+
+Clusterrole -> resource outside namespace
+
+-----------------------------------------------------
+Các loại apigroup
+https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#job-v1-batch
+
+------------------------------------------------------
+Triển khai terraform init ... apply như bình thường (chỉ phần 01-)
+Test:
+    unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+    aws configure list-profiles
+    export AWS_PROFILE=default
+    aws sts get-caller-identity
+    aws iam create-access-key --user-name hr-dev-eksreadonly1
+    (Thêm nếu muốn test với console):
+        aws iam create-login-profile --user-name hr-dev-eksreadonly1 --password @EKSUser101 --no-password-reset-required
+
+	aws configure --profile hr-dev-eksreadonly1
+	  và điền thông tin vào
+      export AWS_PROFILE=hr-dev-eksreadonly1
+      aws sts get-caller-identity
+
+    Ta sẽ phải triệu hồi role-key như bài 21:
+        aws sts assume-role --role-arn "arn:aws:iam::905159657258:role/hr-dev-eks-readonly-role" --role-session-name eksadminsession201
+        export AWS_ACCESS_KEY_ID=...
+        export AWS_SECRET_ACCESS_KEY=...
+        export AWS_SESSION_TOKEN=...
+
+    aws sts get-caller-identity
+    aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1
+
+	kubectl get,list-> với các resource:
+	    ["nodes", "namespaces", "pods", "events", "services"]
+	nhưng:
+		kubectl get sa -A
+		kubectl get configmaps 
+			sẽ ko được vì ko có quyền
+	Chỉnh sửa lại "c10-03-k8s-clusterrole-clusterrolebinding.tf"
+		uncomment + comment
+		Sau đó terraform plan, apply
+        test với:
+            kubectl get sa -A
+            kubectl get configmaps
+                sẽ được vì lúc này đã có quyền
+	Thử lại với:
+		kubectl apply -f 02...
+			sẽ ko được vì chỉ có quyền ["get", "list"] với configmaps

@@ -1,0 +1,28 @@
+Giống 24 nhưng thêm 1 IAM-group cho developer có role -> eks-full-access và có quyền trong namespace: dev của eks với rules cho developer:
+   c11-05:
+   rules:
+   - apiGroups: ["", "extensions", "apps"]
+     resources: ["*"]
+     verbs: ["*"]
+   - apiGroups: ["batch"]
+     resources:
+     - jobs
+     - cronjobs
+     verbs: ["*"]
+
+   c11-03: Thêm CLuster-Role bằng CLuster-Role-binding , getlist giống "eks-readonly-group" cho "eks-developer-group"
+
+Tham khảo các loại apigroup:
+https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#job-v1-batch
+
+Triển khai bằng terraform bình thường
+Test bằng sử dụng user trong IAM-group-developer để kubectl apply 03-...
+    hoặc terraform init ... apply 04-...   (Tham Khảo 24.txt
+    )
+        unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+        hr-dev-eksdeveloper1
+        hr-dev-eks-developer-role
+
+    Vừa có thể:
+        kubectl get node
+        kubectl aplly

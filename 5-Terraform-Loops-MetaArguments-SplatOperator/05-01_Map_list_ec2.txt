@@ -1,0 +1,22 @@
+Dùng Map,list để lựa chọn "instance_type":
+    resource "aws_instance" "myec2vm"
+        {
+              instance_type = var.instance_type_list[1]  # For List
+              hoặc:
+              instance_type = var.instance_type_map["dev"]  # For Map
+        }
+    Map, list được khai báo trong:
+        variable "instance_type_list" {
+          description = "EC2 Instance Type"
+          type = list(string)
+          default = ["t3.micro", "t3.small", "t3.large"]
+        }
+        variable "instance_type_map" {
+          description = "EC2 Instance Type"
+          type = map(string)
+          default = {
+            "dev" = "t3.micro"
+            "qa" = "t3.small"
+            "prod" = "t3.large"
+          }
+        }

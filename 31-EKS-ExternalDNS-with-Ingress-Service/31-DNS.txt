@@ -1,0 +1,6 @@
+31 là từ 30 thêm vào 1 deploy
+Giống D:\KYF\K8s_EKS\EKS\8_ALB_Ingress\5_ALB_Ingress_External_DNS\External_DNS_for_Ingress
+---------------------------------------------------------------------
+01,02,03-... của 31 giống 30
+04-...: Sử dụng kubectl deploy ingress.yaml có thêm external-dns
+05-...: Terraform hóa bước 4

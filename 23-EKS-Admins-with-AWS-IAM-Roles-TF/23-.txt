@@ -1,0 +1,23 @@
+Là Terraform hóa của 22
+--------------------------------------------------------------------------
+Xóa các biến môi trường hiện tại:
+    unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+    aws configure list-profiles
+    export AWS_PROFILE=default      (kyxuan0)
+    aws sts get-caller-identity
+
+    Tạo user-key cho "hr-dev-eksadmin3":
+        aws iam create-access-key --user-name hr-dev-eksadmin3
+        aws configure
+
+    Ta sẽ phải triệu hồi role-key như bài 21:
+    aws sts assume-role --role-arn "arn:aws:iam::905159657258:role/hr-dev-eks-admin-role" --role-session-name eksadminsession201
+    export AWS_ACCESS_KEY_ID=ASIA5FP5YI4VATW4W24X
+    export AWS_SECRET_ACCESS_KEY=ohKWQvPXiFYtDROqBIe4xhqIvL5RNL80rfq3K0es
+    export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEGEaDmFwLW5vcnRoZWFzdC0xIkcwRQIgeS9EQFmMptfanG1Xv/kc1MVaU+jHnPGJaBS9RStjTDICIQD4AiuvyVW20VIDAEvj7VaZP/5YPs5x+eE75WqOChiYqiqoAgiq//////////8BEAEaDDkwNTE1OTY1NzI1OCIM9/9ZkKdlbEwtIQHtKvwB8WL2Sj1hIU641qNE4y+CcUbulsWmzQrRs55a0mir+CFIvXuDZ2JGmAsPC77xrNOCa0FUgXlyL0xseiObwp4TR6lQICo9rOEDzzCpVwOs5tAxQ9O+I39dSt92dauUykV0zMS2+3LkSCvgLBFwmQT4WCfueOkZ6deBXUDN/N9lAFTJaYxFsnXzKabJukomVhaou9sk6iuDnc7OSJ56MRkA81SNZE5Kxt2h+fqMAkSCydrsRpZVW+EQVT3iZXxDxOKimBTs4G8N/o+ga4WkX1TfwSSzFtp8GSOGo6zwio9BsWfF8XKEZ2A5jD1ie7oZ/g9TrIoqJiy1BS4t71ZwMIv/xp0GOp0BugtNsDwVzNwyP8QuJiq1ehxraA49BMdYk2/DlZ36eew45IJUqLSo9NY1enj2UdgPlco8yTU8npFzpWbc9ozPt3EEMFhHXNFkFMLpeZPOWaX8wvTMXAhDhjtUD6Y0dS5T84a+x3PtE2ycVa/hn4Uf109IXYhDB3sdE9rXhnv5qGhG9Gb1fEt1GLAh5S+RMh06VaNYCBEVkmeNp/vWkg==
+    Kiểm tra:
+        aws sts get-caller-identity
+            Sẽ xuất ra arn của role là đúng
+    Triệu hồi demon:
+        aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1

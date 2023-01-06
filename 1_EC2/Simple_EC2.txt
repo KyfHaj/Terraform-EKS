@@ -1,0 +1,50 @@
+Điều kiện:
+    1/ Phải có default-vpc, default-subnet ở region
+    2/ Đảm bảo AMI của EC2 có
+    3/ Đảm bảo xác thực AWS
+Triển khai:
+    Vào powershell quyền admin
+    Vào dir chứa file ec2-instance.tf
+        cd D:\KYF\Terraform_EKS\KYF_terraform\1_EC2\terraform-manifests
+    Thực hiện:
+        terraform init
+        terraform validate
+        terraform plan
+        terraform apply
+            Điền vào: yes
+            Quan sát trên console
+        terraform destroy
+            Điền vào: yes
+
+-------------------------------------------------------
+Hiểu:
+    resource "aws_instance" "ec2demo" {                             # Labels của Block
+      ami           = "ami-0590f3a1742b17914"                       # Ubuntu cho EC2            Argument
+      instance_type = var.instance_type                             # Loại instance             Attributes
+    }
+        Argument:
+            ami           = "ami-0590f3a1742b17914"
+        Attributes:
+            resource_type.resource_name.attribute_name
+            với resource_type được định nghĩa ở 1 block khác
+        Meta-Arguments:
+            resource ...{
+                depends_on = [...]
+            }
+            Resource được thực hiện khi terraform đã hoàn thành trong depends_on
+
+Terraform ở local -> Terraform register (chọn Terraform provider như trong config-file)
+
+    Terraform top level block như hình:
+        Terraform Block: Chỉ định version, provider, terraform-backend
+        Providers Block:
+        Resources Block:
+
+        Input Variables Block:
+        Output Values Block:
+        Local Values Block:
+
+        Data Sources Block:
+        Modules Block:
+
+

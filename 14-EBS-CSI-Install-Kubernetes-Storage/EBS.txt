@@ -1,0 +1,53 @@
+01: Như 13-EKS-IRSA:
+    Ngoài tạo Vpc,...,eks-cluster, còn thêm 01 IAM OIDC Provider (dùng OpenID Connect provider URL -> Thumbprint)
+02:
+    c1: Thêm vào:
+        terraform
+            {
+                helm
+                http
+            }
+        provider "http"
+    c2: remote -> terraform state của 01
+    c3: biến vớ vẫn
+    c4:
+        c4-01:
+            Dùng "data "http"" của "provider "http"" để lưu iam policy tải từ link
+        c4-02:
+            Tạo "ebs_csi_iam_policy" từ data "http" trên
+            Tạo "ebs_csi_iam_role" và attach "ebs_csi_iam_policy"
+        c4-03:
+            Cấp các thông tin của eks-cluster để Helm tác động
+        c4-04:
+            Dùng Helm cài EBS-CSI driver
+
+Sau khi triển khai thì test:
+    kubectl get pod -A          (Xem các controller)
+    kubectl get deploy -A
+  Có thể xem trên console
+
+Xem logs:
+    # Verify logs of liveness-probe container in EBS CSI Controller Pod
+    kubectl -n <NAMESPACE> logs -f <POD-NAME> <CONTAINER-NAME>
+    kubectl -n kube-system logs -f liveness-probe
+
+    # Verify logs of ebs-plugin container in EBS CSI Controller Pod
+    kubectl -n <NAMESPACE> logs -f <POD-NAME> <CONTAINER-NAME>
+    kubectl -n kube-system logs -f ebs-csi-controller-56dfd4fccc-7fgbr ebs-plugin
+
+    # Verify logs of csi-provisioner container in EBS CSI Controller Pod
+    kubectl -n <NAMESPACE> logs -f <POD-NAME> <CONTAINER-NAME>
+    kubectl -n kube-system logs -f ebs-csi-controller-56dfd4fccc-7fgbr csi-provisioner
+
+    # Verify logs of csi-attacher container in EBS CSI Controller Pod
+    kubectl -n <NAMESPACE> logs -f <POD-NAME> <CONTAINER-NAME>
+    kubectl -n kube-system logs -f ebs-csi-controller-56dfd4fccc-7fgbr csi-attacher
+
+    # Verify logs of csi-resizer container in EBS CSI Controller Pod
+    kubectl -n <NAMESPACE> logs -f <POD-NAME> <CONTAINER-NAME>
+    kubectl -n kube-system logs -f ebs-csi-controller-56dfd4fccc-7fgbr csi-resizer
+
+https://github.com/stacksimplify/terraform-on-aws-eks/tree/main/14-EBS-CSI-Install-Kubernetes-Storage
+    Verify EBS CSI Node Daemonset and Pods
+    Verify EBS CSI Node Pod Container Logs
+    Verify EBS CSI Kubernetes Service Accounts

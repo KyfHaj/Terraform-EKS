@@ -1,0 +1,12 @@
+33 là từ 30 thêm vào 1 deploy khác với 31:
+31: 1 host nhiều path
+33: nhiều host, nhiều host 1 path: /
+
+Kết quả là: 3 host tương đương nhau (đã test)
+
+Y chang:
+D:\KYF\K8s_EKS\EKS\8_ALB_Ingress\6_Name_base_virtualhost
+---------------------------------------------------------------------
+01,02,03-... của 32 giống 31,30
+04-...: Sử dụng kubectl deploy ingress.yaml có thêm external-dns
+05-...: Terraform hóa bước 4

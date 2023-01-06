@@ -1,0 +1,15 @@
+32 là từ 30 thêm vào 1 deploy khác với 31
+Dùng Classic-loadbalancer thay vì App-Load-Balancer
+Y chang:
+D:\KYF\K8s_EKS\EKS\8_ALB_Ingress\5_ALB_Ingress_External_DNS\External_DNS_for_Service_LoadBalancer
+---------------------------------------------------------------------
+01,02,03-... của 32 giống 31,30
+04-...: Sử dụng kubectl deploy ingress.yaml có thêm external-dns
+05-...: Terraform hóa bước 4
+-----------------------------
+Thêm vào service.yaml 
+   alb.ingress.kubernetes.io/healthcheck-path: /app1/index.html
+   external-dns.alpha.kubernetes.io/hostname: extdns-k8s-service-demo101.stacksimplify.com
+---------------------------------------------------------------------
+Là classic-loadbalancer nhưng tại sao lại ?????????????????
+alb.ingress.kubernetes.io/healthcheck-path: /app1/index.html

@@ -1,0 +1,4 @@
+28-EKS... y chang ý tưởng với D:\KYF\K8s_EKS\EKS\8_ALB_Ingress\3_Context_Path_Routing
+-----------------------------------------------------------------
+28-EKS... 01,02 không khác với 01,02 của 27-EKS...,26-EKS...
+Chỉ khác kubectl apply tạo nhiều path

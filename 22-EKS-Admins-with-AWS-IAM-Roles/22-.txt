@@ -1,0 +1,29 @@
+Với nhiều Aws-user, thì ta tạo luôn cho nó 1 cái aws-group có policy: sts -> 1 cái role. Xem thêm cách tạo: https://github.com/stacksimplify/aws-eks-kubernetes-masterclass/tree/master/11-DevOps-with-AWS-Developer-Tools
+Role này có full access->eks
+Configmap role này -> user/group của eks-cluster để có quyền admin:
+	kubectl -n kube-system edit configmap aws-auth
+	mapRoles: |
+		....
+        - rolearn: arn:aws:iam::905159657258:role/role-eks-admin-kyf
+          username: eks-admin
+          groups:
+            - system:masters
+
+1/ Tạo 1 user, trong group rồi triệu hồi:
+	aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1 --profile admin-group-eks-1
+	Sẽ "FAIL"
+2/ ta sẽ phải triệu hồi role-key:
+aws sts assume-role --role-arn "arn:aws:iam::905159657258:role/role-eks-admin-kyf" --role-session-name eksadminsession201
+
+export AWS_ACCESS_KEY_ID=ASIA5FP5YI4VGKEIZ55H
+export AWS_SECRET_ACCESS_KEY=5D4JezhWKgrA+EzHZd6PZxVnDRb8UOtUpwDbua0e
+export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEGEaDmFwLW5vcnRoZWFzdC0xIkYwRAIge9JffGWdPuD3spZ363o2HRRFtj4YCLZP6m0xpz0qrW4CIHwW9X5qN7AlGY7c7OcoSwON8p5kxc1W02KMEYDxRVfWKqgCCKr//////////wEQARoMOTA1MTU5NjU3MjU4IgxlVNd1kPMP7SQc1R0q/AHPxJtXVRXa4OsDf6rxXyMAd9+ijf9Nfa1jWFO226b3KXFqSkm9+zq60KIaZIrQKimufmVgSG5MtS48HRuqEf8fvBOqpINcSLrexcCKlGyzxfg96gim+B8PfSFZuSy46F0Di/ZYD/jFewHjeIdNMD6cXO7LF9dNgpiDKUQAs9rM3+UJr8vuSqb2Y3oJQQZzHoEDeC5Fz9cyHdoUFDG+jJ8VwcQbr9ptj09UHJov9oyfzKDLE9wSQyuP0dodeSeDFCJwUV47DDXHx5OA4er35N4Sb1OLvOs+MickS317wN41prvf6nCQYpWEfIU6OqhDRZSB/p7gpj9DGOiwDMEwyvDGnQY6ngHuE/adM4wuZDseGUfgmUrwKKje84Y92Mxttf+lUMld9RACfHeit698sM8jMwW4yKvE8Sl7YHabEEM6H0q2n/pvaHjz6QZqlBHMgxJUbO5NzmNRoJPDa7+T9+m2Y7wGfvG+G2niYcBh5S8wrMx6fYCaD2OUpJqI1/fyVyPc+pTHmG11Z+948PZINyMJT8Jh085YE5X7j8X77vQBCdmkrQ==
+
+Kiểm tra:
+	aws sts get-caller-identity
+		Sẽ xuất ra arn của role là đúng
+Sau đó triệu hồi:
+	aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1
+
+
+

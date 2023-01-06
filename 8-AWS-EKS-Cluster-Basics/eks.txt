@@ -1,0 +1,7 @@
+Phần c5-01-eks-variables.tf: ??
+    variable "cluster_endpoint_private_access"
+    variable "cluster_endpoint_public_access" <- variable "cluster_endpoint_public_access_cidrs"
+
+c5-01->c5-06
+
+c5-02: output

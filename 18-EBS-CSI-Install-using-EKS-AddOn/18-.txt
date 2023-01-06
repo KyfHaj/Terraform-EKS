@@ -1,0 +1,22 @@
+18-:
+01-... Giống 01 của 15-EBS-...
+Khác biệt ở 02-...
+	c4-01: Tải Iam-policy.json -> data "http" "ebs_csi_iam_policy"
+	c4-02: Tạo IAM role có attach iam-policy tạo từ data trên
+	c4-03: Tạo resource "aws_eks_addon"
+			Thay vì như bài 14-EBS-CSI...:
+				c4-03: provider "helm"
+				c4-04: resource "helm_release" "ebs_csi_driver"
+	
+
+
+------------------------
+Bỏ 2 dòng:
+data "aws_caller_identity" "current" {}
+
+output "aws_account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
+
+
+Thử với kubectl

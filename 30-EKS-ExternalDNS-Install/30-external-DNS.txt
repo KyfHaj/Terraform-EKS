@@ -1,0 +1,8 @@
+30-EKS-ExternalDNS-Install: Cài ingress + external DNS
+01-...,02-... vẫn giống 29,28,27,26-...
+Thêm 03-externaldns-install-terraform-manifest để cài external-dns cho cụm:
+	c4-01: Tạo IAM-role + IAM-policy : AllowExternalDNSUpdates
+	c4-02: Thêm provider "helm"
+	c4-03: Cài external-dns bằng helm
+	c4-04: output
+  Hơi khác vì cài bằng "helm" thay vì làm chay như: D:\KYF\K8s_EKS\EKS\8_ALB_Ingress\5_ALB_Ingress_External_DNS\ALB_Ingress_External.txt

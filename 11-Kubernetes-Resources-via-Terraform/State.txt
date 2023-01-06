@@ -1,0 +1,16 @@
+Để tác động tiếp tới 1 terraform đã build, thay vì phải xóa và build lại từ đầu. Ta tác động tới Terraform_state thông qua:
+    - cluster_id
+    - cluster-endpoint
+    - cluster-certificate-author
+    - token
+Triển khai:
+    c1: provider - như bao cái khác
+    c2: data "terraform_remote_state":
+            - backend = "local"
+            - path = "../../08-AWS-EKS-Cluster-Basics/01-ekscluster-terraform-manifests/terraform.tfstate"
+            Trỏ đến state (đã tạo ra trong khi build) ở "08-AWS-EKS-Cluster-Basics"
+    c3: truyền đến các thông số để nó remote:
+            cluster-endpoint
+            cluster-certificate-author
+            token
+    c4,c5,c6,c7: Deploy eks theo phong cách terraform thay vì: "kubectl apply file.yaml"

@@ -1,0 +1,6 @@
+1 Deployment, nhiều kiểu service:
+
+aws eks --region ap-northeast-1 update-kubeconfig --name hr-stag-eksdemo1
+kubectl apply -f kube-manifests
+
+kubectl scale deployment/myapp1-deployment --replicas=10

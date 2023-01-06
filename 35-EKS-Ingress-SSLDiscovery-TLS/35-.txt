@@ -1,0 +1,75 @@
+35 giống 34 cũng bỏ đi để k8s tự động discovery (Chỉ có "RSA 2048" mới auto-discovery được cần thời gian để auto-discover certification <60s)
+Những certification loại "ECDSA P 256" hoặc "ECDSA P 256" không thể tự auto-discover được
+và đặt tên cho host bằng:
+  tls:
+  - hosts:
+    - "*.haxuan.link"
+Khác biệt so với 34
+  tls:
+  - hosts:
+    - "*.haxuan.link"
+  rules:
+    - http:
+        paths:
+          - path: /app1
+            pathType: Prefix
+            backend:
+              service:
+                name: app1-nginx-nodeport-service
+                port:
+                  number: 80
+    - http:
+        paths:
+          - path: /app2
+            pathType: Prefix
+            backend:
+              service:
+                name: app2-nginx-nodeport-service
+                port:
+                  number: 80
+     Thay vì:
+    rules:
+      - host: app102.stacksimplify.com
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: app1-nginx-nodeport-service
+                  port:
+                    number: 80
+      - host: app202.stacksimplify.com
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: app2-nginx-nodeport-service
+                  port:
+                    number: 80
+-----------------------------------------------------------------
+  Ở terraform hóa (05-...) cũng chỉ để thay đổi điều này
+
+***Thử test với:
+  tls:
+  - hosts:
+    - "kyf1.haxuan.link"
+Khi đó liệu rằng external-dns.alpha.kubernetes.io/hostname/app1 hoặc /app2 và kyf1.haxuan.link/abc (default-backend) có access được không??
+Trả lời:
+    Nếu host là: "*.haxuan.link" thì:
+        <mọi thứ>.haxuan.link/<mọi thứ>
+        <mọi thứ>.haxuan.link
+               đều được
+    Nếu host là: "kyf1.haxuan.link" thì:
+        kyf hoặc xavi.haxuan.link/<mọi thứ>
+        kyf hoặc xavi.haxuan.link
+               đều được
+
+***** Vì cùng 1 ingress nên đổi kiểu gì cũng thế thôi
+***** Muốn xavi.haxuan.link ->
+           iniesta.haxuan.link ->
+           messi.haxuan.link ->
+                thì tạo 3 ingress khác nhau đến 3 service khác nhau
+                giống như: "D:\KYF\K8s_EKS\EKS\9_Fargate\2_Advanced_Fargate"

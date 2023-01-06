@@ -1,0 +1,30 @@
+Với "v1-vpc-module":
+    Sử dụng VPC modules để tạo 1 vpc:
+Sau khi apply, Kiểm tra:
+    1) Verify VPC
+    2) Verify Subnets:          3cái: Public, Private, Database subnets
+    3) Verify IGW
+    4) Verify Public Route for Public Subnets
+    5) Verify no public route for private subnets
+    6) Verify NAT Gateway and Elastic IP for NAT Gateway
+    7) Verify NAT Gateway route for Private Subnets
+    8) Verify no public route or no NAT Gateway route to Database Subnets
+    9) Verify Tags
+
+Với "v2-vpc-module-...":
+    Biến trong "terraform.tfvars" sẽ ghi đè lên biến trong "c2-generic-variables.tf"
+               "vpc.auto.tfvars"                           "c4-01-vpc-variables.tf"
+    File.tfvars sẽ set biến dễ dàng hơn file.tf
+
+    Local values là 1 giá trị gần giống biến nhưng có thể:
+        name = "${var.business_divsion}-${var.environment}"
+    và thêm 1 vài trò (chạy 1 vài hàm, biểu thức,...) như:
+        instance_ids = concat(aws_instance.blue.*.id, aws_instance.green.*.id)
+        Tham khảo link:"https://developer.hashicorp.com/terraform/language/values/locals"
+
+    Thêm vào output lấy thẳng từ modules
+Sau khi apply, kiểm tra như trên
+
+------------------------------------------------------------------
+Hiểu module như 1 thư viện (1 tập các resource đã connect với nhau)
+vpc_single_nat_gateway: tức chỉ 1 NAT Gateway được dùng cho cả 2 private-subnets

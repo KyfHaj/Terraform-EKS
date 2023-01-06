@@ -1,0 +1,53 @@
+Tạo IAM role for EKS-Cluster
+	IAM role: -> EKS-Cluster với AmazonEKSClusterPolicy
+
+Tạo VPC cho EKS-CLuster
+	Sử dụng CLoudformation
+		S3: https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-private-subnets.yaml
+		Name: eks-vpc-stack
+	Đã tạo ra:
+		1 eks-vpc-stack-VPC
+		1 eks-vpc-stack-ControlPlaneSecurityGroup
+		2 eks-vpc-stack-PublicSubnet01
+		2 eks-vpc-stack-PrivateSubnet
+			3 Routetable
+			2 NAT-gateway cho 2 private-subnet
+			2 Elastic IP cho 2 NAT-gateway
+
+Tạo EKS CLuster
+	Name: eks-cluster
+	Role: eksclusterrole
+	vpc: eks-vpc-stack
+	security group: eks-vpc-stack-controlplane...
+
+	Cluster endpoint access: Public,Public and private, private
+
+	Chọn configure logging
+	[API server Audit Authenticator Controllermanager Scheduler]
+
+Tạo IAM Authen + Kubectl
+	aws eks --region ap-northeast-1 update-kubeconfig --name eks-cluster
+	aws eks --region ap-northeast-1 update-kubeconfig --name eks-cluster
+	aws eks update-kubeconfig --name eks-cluster --region ap-northeast-1
+
+Tạo IAM Role for EKS-Nodes
+	IAM role -> EC2
+		Name: eksworkernodegroup:
+			AmazonEKSWorkerNodePolicy
+			AmazonEC2ContainerRegistryReadOnly
+			AmazonEKS_CNI_Policy
+
+Tạo Worker nodes
+	Cluster endpoint access: Public,Public and private, private
+
+Deploy demo app
+---------------------------------------------------------------
+ENI của workernode cho phép nó giao tiếp với control-plane
+Khi thêm security-group của 1 instance tức là đã điều chỉnh ENI của 1 instance
+Policy: "AmazonEKSVPCResourceController" để cho EKS modify ENI cho node,pod
+ENI <-> Security-group
+
+Cluster endpoint access:
+    Public: Kubectl qua internet
+    Private: Kubectl trong eks-vpc ( AWS VPN or AWS DirectConnect to your VPC.)
+    Public and Private endpoints: cả 2 đều đc

@@ -1,0 +1,9 @@
+Tạo S3 bucket
+Tạo IAM OIDC Provider (dùng OpenID Connect provider URL -> Thumbprint)
+Tạo IAM Role (Web Identity) cho Identity-provider chứa policy: access S3
+	Chỉnh sửa phần Trust relationships (Thực thể có thể nhận role này): 		Serviceaccount:namespace/name
+Khai báo service-account
+	metadata:
+		name:
+		namespace:
+		annotation: eks.amazonaws.com/role-arn: ARN-role trên

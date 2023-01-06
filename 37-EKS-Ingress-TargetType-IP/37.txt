@@ -1,0 +1,13 @@
+37: Eks theo: "alb.ingress.kubernetes.io/target-type: ip  "
+Thử test lại phần: D:\KYF\K8s_EKS\EKS\8_ALB_Ingress\8_IP_type và comment:
+	 "alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:905159657258:certificate/f7429a0a-aac3-446f-b92b-763d53141729"
+Thí nghiệm:
+    Với file.yaml
+         Tuy là: app.haxuan.link
+         và tls: *.haxuan.link
+
+         Nhưng <tất cả>.haxuan.link
+               <tất cả>.haxuan.link/app1
+               <tất cả>.haxuan.link/app2
+                    đều được
+

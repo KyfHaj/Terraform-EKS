@@ -1,0 +1,9 @@
+Sau khi đã dùng 05-03(để kiểm tra)
+Sử dụng 05-04 để tiếp bước tạo ra instance
+
+
+toset(data...
+toset(keys({for...
+
+
+ap-northeast-1d ko hỗ trợ t2.micro (nhưng chưa cập nhật)

@@ -1,0 +1,10 @@
+Authen: Sử dụng ./kube/config để request -> api-server
+	Để biết là user/service-account nào, thông qua: (slide 185)
+		IAM Identity qua AWS IAM
+		K8s User Check bằng Configmap
+
+Author: Cấp quyền cho User 
+	ClusterRole, ClusterRoleBinding
+	Role, RoleBinding
+
+

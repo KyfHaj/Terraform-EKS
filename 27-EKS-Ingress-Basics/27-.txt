@@ -1,0 +1,5 @@
+27 khác 26 1 chút
+Chỉ là deploy ingress.yaml hoặc sử dụng terraform hóa
+-----------------------------------------------------------
+01-...,02-... Ko có gì thay đổi so với 01-... của 26-EKS-...
+

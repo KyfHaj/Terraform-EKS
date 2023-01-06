@@ -1,0 +1,16 @@
+Input variables:
+    AWS Region
+    Instance Type
+    Key Name
+Output Values:
+    Public IP
+    Public DNS
+Datasources có thể tự động lấy AMI-ID theo filter:
+Tạo 1 sg 2 thành phần:
+    vpc-ssh
+    vpc-web
+---------------------------------------------------
+Terraform Input variables:
+    slide 64
+Terraform Datasources:
+    slide 65

@@ -1,0 +1,47 @@
+Để xác định list AZ hỗ trợ loại EC2:t2.micro ở 1 region cụ thể
+Ở Terraform ko nên thử nghiệm trực tiếp trên code. Ta search thử bằng awscli:
+    aws ec2 describe-instance-type-offerings --location-type availability-zone  --filters Name=instance-type,Values=t2.micro --region ap-northeast-1 --output table
+
+Nếu thích test bằng Terraform với 1 AZ như trên:  "c1-v1-get..."
+    Tạo 1 file.tf:
+        # Datasource
+        data "aws_ec2_instance_type_offerings" "my_ins_type1" {
+          filter {
+            name   = "instance-type"
+            values = ["t2.micro"]
+          }
+          filter {
+            name   = "location"
+            values = ["ap-northeast-1a"]
+            #values = ["ap-northeast-1e"]
+          }
+          location_type = "availability-zone"
+        }
+
+
+        # Output
+        output "output_v1_1" {
+         value = data.aws_ec2_instance_type_offerings.my_ins_type1.instance_types
+        }
+Test với nhiều AZ(1 set):  "c2-v2-get...":
+    data "aws_ec2_instance_type_offerings" "my_ins_type2" {
+      for_each = toset([ "ap-northeast-1a", "ap-northeast-1b", "ap-northeast-1e" ])
+      filter {
+        name   = "instance-type"
+        values = ["t3.micro"]
+      }
+      filter {
+        name   = "location"
+        values = [each.key]
+      }
+      location_type = "availability-zone"
+    }
+
+    #Output-1
+    # Important Note: Once for_each is set, its attributes must be accessed on specific instances
+    output "output_v2_1" {
+      #value = data.aws_ec2_instance_type_offerings.my_ins_type1.instance_types
+      value = toset([for t in data.aws_ec2_instance_type_offerings.my_ins_type2: t.instance_types])
+    }
+Test với nhiều AZ(dynamically):  "c2-v3-get...":
+---------------------------------------------------------

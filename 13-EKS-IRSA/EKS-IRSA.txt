@@ -1,0 +1,41 @@
+Đảm bảo S3:
+    dev/eks-cluster
+    dev/eks-irsa-demo
+Dynamo DB:
+    dev-ekscluster
+    dev-eks-irsa-demo
+
+01: Tạo IAM OIDC Provider (dùng OpenID Connect provider URL -> Thumbprint)
+02: Tạo IAM Role (Web Identity) -  cho Identity-provider chứa policy trên       <-  ĐÂY LÀ 1 ROLE ĐẶC BIỆT
+    Attach policy và Role vừa tạo
+    Tạo service-account ở Cluster gọi
+
+Test:
+    Sau khi triển khai, ta test:
+        01:
+        - aws eks --region ap-northeast-1 update-kubeconfig --name hr-dev-eksdemo1
+        - kubectl get node
+
+        02:
+        - kubectl get job
+        - kubectl logs -f -l app=irsa-demo
+
+-------------------------------------------------------------------------------------------------
+Để Re-excute Job
+Xem các resources của Terraform
+    terraform state list
+Tain 1 resource:
+    terraform taint kubernetes_job_v1.irsa_demo
+  hoặc:
+    terraform apply -replace kubernetes_job_v1.irsa_demo
+
+  Sau khi "terraform plan" sẽ thấy resource kia sẽ được recreate (1 destroy, 1 add), ta thực thi:
+    terraform plan
+    terraform apply -auto-approve
+---------------------------------------------------------------------------------------------------
+Ở tất cả các Role dành cho "service-account" được cài bởi helm như các bài dưới đều dùng cùng loại với Role này
+Role này khác với các loại role thông thường như:
+    Role mà IAM-group dùng STS-policy trỏ tới
+    role của eks-cluster
+    node-group
+       3 thèn trên cùng loại role thông thường hay tạo manually
