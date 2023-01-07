@@ -4,3 +4,6 @@ Sử dụng Terraform để provision EKS có thể sử dụng các dịch vụ
 ![image](https://user-images.githubusercontent.com/36032208/211161371-9db832ef-b732-4bef-b0ca-b0584faea4f4.png)
 Các Service sẽ được EKS sử dụng:
 ![image](https://user-images.githubusercontent.com/36032208/211161478-89a489d6-5f2b-4d1a-8563-69ff1fc292ec.png)
+Và thêm HPA, VPA, Cluster-autoscaler
+Thêm: IAM User, IAM groups:
+![image](https://user-images.githubusercontent.com/36032208/211161932-e11214fe-107e-4da3-9718-8d5acf6f0a90.png)
